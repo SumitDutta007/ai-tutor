@@ -61,8 +61,11 @@
   --sidebar-ring: oklch(0.708 0 0);
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
+  
 }
-
+body {
+  cursor: none;
+}
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -342,4 +345,18 @@
 .animate-gradient {
   background-size: 200%;
   animation: gradient-move 2.5s linear infinite;
+}
+.custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 12px 6px rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  mix-blend-mode: screen;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
 }

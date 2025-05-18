@@ -63,8 +63,8 @@ const AuthForm = ({type}) => {
       const isSignIn = type === "sign-in"
 
     return (
-        <div className = "card-border lg:min-w-[566px]">
-            <div className="flex flex-col gap-6 card py-14 px-10">
+        <div className = "card-border lg:min-w-[566px] bg-white">
+            <div className="flex flex-col gap-6 card py-14 px-10 ">
                 <div className="flex flex-row gap-2 justify-center">
                     <Image src="/logo.png" alt="logo" width={50} height={50} />
                     <h1 className="text-primary-100">AI Tutor</h1>
@@ -72,7 +72,7 @@ const AuthForm = ({type}) => {
                 <h3> Your personalised ai-tutor</h3>
             
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 mt-4 form">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 mt-4 form ">
                         {!isSignIn && <FormField control={form.control} name="name" label="Name" placeholder="Your Name" type="name"/>}
                         <FormField control={form.control} name="email" label="Email" placeholder="Enter your email" type="email"/> 
                         <FormField control={form.control} name="password" label="Password" placeholder="Enter your password" type="password"/>
