@@ -94,7 +94,7 @@ const StarryNight = () => {
         position: 'fixed',
         top: 0,
         left: 0,
-        zIndex: 0  // now behind children wrapped at higher z-index
+        zIndex: -1  // now behind children wrapped at higher z-index
       }}
     />
   );

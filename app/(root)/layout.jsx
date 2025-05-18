@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { isAuthenticated } from '@/lib/actions/auth.action'
 import { redirect } from 'next/navigation'
+import StarryNight from '../../canvas/stars.jsx'
 
 const Rootlayout =async ({children}) => {
   const isUserAuthenticated = await isAuthenticated();
@@ -12,6 +13,7 @@ const Rootlayout =async ({children}) => {
 
   return (
     <div className=" relative overflow-x-hidden">
+      <StarryNight className ="z-[-1]"/>
       <nav className="m-4">
         <Link href="/" className="flex items-center gap-2">
           <Image
