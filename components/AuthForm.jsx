@@ -9,6 +9,9 @@ import FormField from "@/components/FormField"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "@/firebase/client";
+import { signUp, signIn } from "@/lib/actions/auth.action"
 
 const authFormSchema = (type) =>{
     if(type === "sign-in"){
@@ -39,24 +42,52 @@ const AuthForm = ({type}) => {
       })
      
       // 2. Define a submit handler.
-      function onSubmit(values) {
+     async function onSubmit(values) {
         console.log(values)
         try{
             if(type === "sign-in"){
                 // sign in logic
+                const {email, password} = values;
+                const user = await signInWithEmailAndPassword(auth, email, password);
+                const idToken = await user.user.getIdToken();
+                if(!idToken){
+                    toast.error("User not found")
+                    return;
+                }
+                const res = await signIn({
+                    email: email,
+                    idToken: idToken,
+                })
+                if(!res?.success){
+                    toast.error(res?.message)
+                    return
+                }
+                
                 router.push("/")
                 console.log("sign in")
                 toast.success("Sign in successful")
             }
             else{
                 // sign up logic
+                const {name, email, password} = values;
+                const user = await createUserWithEmailAndPassword(auth, email, password);
+                const res = await signUp({
+                    uid: user.user.uid,
+                    name: name,
+                    email: email,
+                    password: password,
+                })
+                if(!res?.success){
+                    toast.error(res?.message)
+                    return
+                }
                 router.push("/sign-in")
                 console.log("sign up")
                 toast.success("Sign up successful, Please sign in")
             }
         }catch (error) {
-            console.log(error)
-            toast.error("Something went wrong.")
+            console.log(error);
+            toast.error("Something went wrong.", error.message);
         }
       }
   
@@ -64,12 +95,12 @@ const AuthForm = ({type}) => {
 
     return (
         <div className = "card-border lg:min-w-[566px] bg-white">
-            <div className="flex flex-col gap-6 card py-14 px-10 ">
-                <div className="flex flex-row gap-2 justify-center">
-                    <Image src="/logo.png" alt="logo" width={50} height={50} />
-                    <h1 className="text-primary-100">AI Tutor</h1>
+            <div className="flex flex-col gap-6 card py-14 px-10 justify-center items-center">
+                <div className="flex flex-row gap-2 justify-center items-center">
+                    <Image src="/ai-tutor.png" alt="logo" width={50} height={50} />
+                    <h1 className="text-primary-100 text-3xl">AI Tutor</h1>
                 </div>
-                <h3> Your personalised ai-tutor</h3>
+                <h4> Your personalised ai-tutor</h4>
             
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 mt-4 form ">

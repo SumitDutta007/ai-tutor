@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const Home = () => {
   return (
-      <main className="flex lg:mt-20 flex-col lg:flex-row items-center justify-between min-h-[calc(90vh-4.1rem)]">
+      <main className="flex lg:mt-20 flex-col lg:flex-row items-center justify-between min-h-[calc(90vh-4.3rem)]">
         <Image src="/hero blur img.png" alt="hero" width={1000} height={1000} className="absolute top-0 left-0 w-full h-full object-cover blur-[2px] opacity-50 z-0" />
         <Image src="/hero rings img.png" alt="hero" width={600} height={600} className="absolute top-25 left-10 opacity-50 z-0" />
         <div className="max-w-xl ml-[10%] z-10 mt-20 lg:mt-0">

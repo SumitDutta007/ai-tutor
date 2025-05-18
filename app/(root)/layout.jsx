@@ -1,11 +1,18 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { isAuthenticated } from '@/lib/actions/auth.action'
+import { redirect } from 'next/navigation'
 
-const Rootlayout = ({children}) => {
+const Rootlayout =async ({children}) => {
+  const isUserAuthenticated = await isAuthenticated();
+  if(!isUserAuthenticated){
+    redirect('/sign-in');
+  }
+
   return (
     <div className=" relative overflow-x-hidden">
-      <nav className="">
+      <nav className="m-4">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/ai-tutor.png"
