@@ -98,7 +98,7 @@ const AuthForm = ({type}) => {
             <div className="flex flex-col gap-6 card py-14 px-10 justify-center items-center">
                 <div className="flex flex-row gap-2 justify-center items-center">
                     <Image src="/ai-tutor.png" alt="logo" width={50} height={50} />
-                    <h1 className="text-primary-100 text-3xl">AI Tutor</h1>
+                    <h1 className="text-primary-100 text-3xl">Tutorly</h1>
                 </div>
                 <h4> Your personalised ai-tutor</h4>
             

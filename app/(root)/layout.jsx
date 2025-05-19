@@ -22,7 +22,7 @@ const Rootlayout =async ({children}) => {
             width={50}
             height={50}
           />
-          <h2 className="text-primary-100">AI Tutor</h2>
+          <h2 className="text-primary-100">Tutorly</h2>
         </Link>
       </nav>
       {children}
