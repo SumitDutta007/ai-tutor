@@ -38,7 +38,7 @@ const Agent = ({ userName, userId, avatar }) => {
     //             const response = await fetch("https://api.vapi.ai/assistant", {
     //                 method: "POST",
     //                 headers: {
-    //                 "Authorization": "Bearer e1c33ad1-e09a-4523-b5c3-c5dee6556e99",
+    //                 "Authorization": `Bearer ${process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN}`,
     //                 "Content-Type": "application/json"
     //                 },
     //                 body: JSON.stringify({
