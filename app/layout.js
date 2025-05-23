@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased pattern`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <CustomCursor />
         {children}

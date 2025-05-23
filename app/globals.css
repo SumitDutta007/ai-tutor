@@ -306,9 +306,6 @@ body {
   @apply bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33];
 }
 
-@utility pattern {
-  @apply bg-[url('/pattern.png')] bg-top bg-no-repeat;
-}
 
 @utility blue-gradient-dark {
   @apply bg-gradient-to-b from-[#171532] to-[#08090D];
