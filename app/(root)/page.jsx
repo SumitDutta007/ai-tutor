@@ -17,6 +17,13 @@ const Home = () => {
               </div>
             </div>
           </Link>
+          <Link href="/quiz">
+          <div className='relative w-full h-8 rounded-full bg-[linear-gradient-to-r from-[#656565] via-[#eaa471] to-[#441f04] bg-[length:200%] animate-gradient shadow-[0_0_15px_rgba(255,255,255,0.4)] py-6 my-4'>
+            <div className='absolute inset-[3px] bg-black rounded-full flex justify-center items-center gap-1 hover:text-[#e99b63] text-white cursor-pointer'>
+            Take a Quiz
+            </div>
+          </div>
+          </Link>
         </div>
 
         {/* Right Section */}

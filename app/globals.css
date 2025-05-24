@@ -338,6 +338,18 @@ body {
     background-position: 200%;
   }
 }
+@keyframes bounce {
+  
+  0%, 100%{
+    transform: 'translateY(0)';
+  }
+  50%{
+    transform: 'translateY(-25%)';
+  }
+}
+.bounce{
+  animation: bounce 1s ease-in-out infinite;
+}
 
 .animate-gradient {
   background-size: 200%;
