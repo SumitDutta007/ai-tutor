@@ -1,14 +1,15 @@
 "use client"
 
 import { teacher } from "@/constants/workflow";
+import { createFeedback } from "@/lib/actions/general.action";
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import FileUpload from "./FileUpload";
 import { toast } from "sonner";
+import FileUpload from "./FileUpload";
 
 const CallStatus = {
     INACTIVE: 'INACTIVE',
@@ -18,7 +19,7 @@ const CallStatus = {
     INITIAL_GREETING: 'INITIAL_GREETING'
 };
 
-const Agent = ({ userName, userId, avatar }) => {
+const Agent = ({ userName, userId, avatar, classroomId }) => {
     const router = useRouter();
     const [callStatus, setCallStatus] = useState(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
@@ -26,9 +27,10 @@ const Agent = ({ userName, userId, avatar }) => {
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState(null);
     const [lastMessage, setLastMessage] = useState('');
+    const [feedbackId, setFeedbackId] = useState(null);
 
     const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({model: 'models/gemini-1.5-flash'})
+    const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-flash" });
 
     // Create initial greeting assistant and start call when component mounts
     // useEffect(() => {
@@ -169,21 +171,47 @@ const Agent = ({ userName, userId, avatar }) => {
         if (messages.length > 0) {
             setLastMessage(messages[messages.length - 1].content);
         }
-        if (callStatus === CallStatus.FINISHED) router.push('/');
-    }, [messages, callStatus, userId, router]);
+
+        const handleGenerateFeedback = async () => {
+            if (callStatus === CallStatus.FINISHED && messages.length > 0) {
+                try {
+                    const formData = new FormData();
+                    formData.append('classroomId', classroomId);
+                    formData.append('userId', userId);
+                    formData.append('transcript', JSON.stringify(messages));
+
+                    const { success, feedbackId: id, error } = await createFeedback(formData);
+
+                    if (success && id) {
+                        toast.success('Feedback generated successfully!');
+                        router.push(`/classroom/${classroomId}/feedback`);
+                    } else {
+                        console.error("Error generating feedback:", error);
+                        toast.error(error || "Failed to generate feedback");
+                        router.push("/");
+                    }
+                } catch (error) {
+                    console.error("Error generating feedback:", error);
+                    toast.error(error.message || "Failed to generate feedback");
+                    router.push("/");
+                }
+            }
+        };
+
+        handleGenerateFeedback();
+    }, [messages, callStatus, userId, router, classroomId]);
 
     const handleDisconnect = async () => {
-        toast.success('Call ended. Thank you for using Tutorly!');
+        toast.success('Generating your feedback...');
         setIsSpeaking(false);
         vapi.stop();
         setCallStatus(CallStatus.FINISHED);
-        router.push('/');
     };
 
     return (
         <>
             <div className="call-view z-[10]">
-                <div className="card-interviewer m-4">
+                <div className="card-classroomer m-4">
                     <div className="avatar">
                         <Image src="/ai-tutor.png" alt="vapi" width={65} height={65} className="object-cover" />
                         {isSpeaking && <span className="animate-speak" />}
