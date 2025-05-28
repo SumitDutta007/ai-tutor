@@ -1,0 +1,14 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://tutorly.ai/sitemap.xml
+
+# Prevent crawling of authentication pages
+Disallow: /sign-in
+Disallow: /sign-up
+Disallow: /api/
+
+# Rate limiting
+Crawl-delay: 10 

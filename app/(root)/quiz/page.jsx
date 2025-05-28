@@ -8,6 +8,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { FiArrowRight, FiCpu } from 'react-icons/fi';
 import { toast } from 'sonner';
 
+export const metadata = {
+  title: "AI-Powered Quiz - Test Your Knowledge | Tutorly",
+  description: "Take our AI-generated quizzes to test your understanding. Upload your study materials and get instant, personalized assessments of your knowledge.",
+  keywords: "AI quiz, knowledge assessment, personalized testing, educational evaluation, learning assessment",
+};
+
 export default function Quiz() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
