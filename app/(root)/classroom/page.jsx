@@ -5,11 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from 'react';
 
-export const metadata = {
-  title: "Virtual Classroom - Tutorly AI",
-  description: "Join our interactive virtual classroom powered by AI. Upload study materials, engage with your AI tutor, and receive personalized feedback in real-time.",
-  keywords: "virtual classroom, AI learning, interactive tutoring, personalized education, online learning",
-};
 
 const Page = async () => {
     const user = await getCurrentUser();

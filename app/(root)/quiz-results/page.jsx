@@ -4,12 +4,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FiArrowLeft, FiCheck, FiStar, FiX } from 'react-icons/fi';
 
-export const metadata = {
-  title: "Quiz Results & Performance Analysis | Tutorly",
-  description: "View your detailed quiz performance analysis. Get insights into your strengths and areas for improvement with our AI-powered assessment system.",
-  keywords: "quiz results, performance analysis, learning assessment, educational progress, AI feedback",
-};
-
 export default function QuizResults() {
   const router = useRouter();
   const [results, setResults] = useState(null);
