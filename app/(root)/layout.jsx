@@ -1,8 +1,9 @@
-import React from 'react'
-import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { isAuthenticated, signOut } from '@/lib/actions/auth.action'
 import Image from 'next/image'
-import { isAuthenticated } from '@/lib/actions/auth.action'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import React from 'react'
 import StarryNight from '../../canvas/stars.jsx'
 
 const Rootlayout =async ({children}) => {
@@ -12,9 +13,9 @@ const Rootlayout =async ({children}) => {
   }
 
   return (
-    <div className=" relative overflow-x-hidden">
-      <StarryNight className ="z-[-1]"/>
-      <nav className="m-4">
+    <div className="relative overflow-x-hidden">
+      <StarryNight className="z-[-1]"/>
+      <nav className="m-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/ai-tutor.png"
@@ -24,6 +25,15 @@ const Rootlayout =async ({children}) => {
           />
           <h2 className="text-primary-100">Tutorly</h2>
         </Link>
+        <form action={signOut} className='z-10'>
+          <Button 
+            type="submit"
+            variant="outline"
+            className="text-primary-100 hover:text-primary-200 border-primary-100 hover:border-primary-200"
+          >
+            Logout
+          </Button>
+        </form>
       </nav>
       {children}
     </div>

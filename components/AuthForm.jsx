@@ -42,48 +42,56 @@ const AuthForm = ({type}) => {
       })
      
       // 2. Define a submit handler.
-     async function onSubmit(values) {
-        console.log(values)
+     async function onSubmit(data) {
         try{
-            if(type === "sign-in"){
-                // sign in logic
-                const {email, password} = values;
-                const user = await signInWithEmailAndPassword(auth, email, password);
-                const idToken = await user.user.getIdToken();
-                if(!idToken){
-                    toast.error("User not found")
-                    return;
+            if(type === "sign-up"){
+                // sign up logic
+                const { name, email, password } = data;
+
+                const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+                );
+
+                const result = await signUp({
+                uid: userCredential.user.uid,
+                name: name || "",
+                email,
+                password,
+                });
+
+                if (!result.success) {
+                toast.error(result.message);
+                return;
                 }
-                const res = await signIn({
-                    email: email,
-                    idToken: idToken,
-                })
-                if(!res?.success){
-                    toast.error(res?.message)
-                    return
-                }
-                
-                router.push("/")
-                console.log("sign in")
-                toast.success("Sign in successful")
+
+                toast.success("Account created successfully. Please sign in.");
+                router.push("/sign-in");
             }
             else{
-                // sign up logic
-                const {name, email, password} = values;
-                const user = await createUserWithEmailAndPassword(auth, email, password);
-                const res = await signUp({
-                    uid: user.user.uid,
-                    name: name,
-                    email: email,
-                    password: password,
-                })
-                if(!res?.success){
-                    toast.error(res?.message)
-                    return
+                // sign in logic
+                const { email, password } = data;
+
+                const userCredential = await signInWithEmailAndPassword(
+                  auth,
+                  email,
+                  password
+                );
+        
+                const idToken = await userCredential.user.getIdToken();
+                if (!idToken) {
+                  toast.error("Sign in Failed. Please try again.");
+                  return;
                 }
-                router.push("/sign-in")
-                console.log("sign up")
-                toast.success("Sign up successful, Please sign in")
+        
+                await signIn({
+                  email,
+                  idToken,
+                });
+        
+                toast.success("Signed in successfully.");
+                router.push("/");
             }
         }catch (error) {
             console.log(error);
