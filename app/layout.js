@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
         <link rel="canonical" href="https://ai-tutor-gamma-taupe.vercel.app/" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CustomCursor />
         {children}

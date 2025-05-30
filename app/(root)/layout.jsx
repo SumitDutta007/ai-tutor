@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import StarryNight from '../../canvas/stars.jsx'
-
 const Rootlayout =async ({children}) => {
   const isUserAuthenticated = await isAuthenticated();
   if(!isUserAuthenticated){

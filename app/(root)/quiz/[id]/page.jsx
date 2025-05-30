@@ -1,47 +1,89 @@
 'use client'
+import { db } from '@/firebase/client';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { FiArrowLeft, FiCheck, FiStar, FiX } from 'react-icons/fi';
 
-export default function QuizResults() {
+export default function QuizResults({params}) {
+  const {id} = use(params);
   const router = useRouter();
   const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedAnswers = localStorage.getItem('quizAnswers');
-    const storedQuestions = localStorage.getItem('quizQuestions');
-
-    if (storedAnswers && storedQuestions) {
+    const fetchQuizResults = async () => {
       try {
-        const answers = JSON.parse(storedAnswers);
-        const questions = JSON.parse(storedQuestions);
+        const quizDoc = await getDoc(doc(db, "quizes", id));
+        const quizData = quizDoc.data();
+        console.log("Quiz Data:", quizData);
+        
+        if (!quizData) {
+          console.warn("No quiz data found in Firebase.");
+          setLoading(false);
+          return;
+        }
 
-        const correct = questions.filter((q, index) =>
-          answers[index] === q.correctAnswer
-        ).length;
+        const answers = quizData.answers || {};
+        const questions = quizData.questions || [];
 
-        setResults({
-          total: questions.length,
-          correct,
-          percentage: (correct / questions.length) * 100,
-          questions: questions.map((q, index) => ({
-            ...q,
-            userAnswer: answers[index],
-            isCorrect: answers[index] === q.correctAnswer,
-          })),
-        });
+        if (questions.length > 0) {
+          // Count correct answers by comparing each question's answer
+          let correctCount = 0;
+          const questionResults = questions.map((q, index) => {
+            const isCorrect = answers[index] === q.correctAnswer;
+            if (isCorrect) correctCount++;
+            return {
+              ...q,
+              userAnswer: answers[index] || "Not answered",
+              isCorrect,
+            };
+          });
+
+          const results = {
+            total: questions.length,
+            correct: correctCount,
+            percentage: (correctCount / questions.length) * 100,
+            questions: questionResults,
+          };
+
+          setResults(results);
+          
+          // Update the quiz document with the results
+          await updateDoc(doc(db, "quizes", id), {
+            total: questions.length,
+            correct: correctCount,
+            completedAt: new Date(),
+          });
+        } else {
+          console.warn("No questions found in quiz data.");
+        }
       } catch (err) {
-        console.error("Failed to parse quiz data:", err);
-        // Optionally redirect or show an error
+        console.error("Failed to fetch or parse quiz data:", err);
+      } finally {
+        setLoading(false);
       }
-    } else {
-      console.warn("No quiz data found.");
-      // Optionally redirect to quiz page if no data
-    }
-  }, []);
+    };
 
-  if (!results) return <div>Loading...</div>;
+    fetchQuizResults();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-white text-xl">Loading quiz results...</div>
+      </div>
+    );
+  }
+
+  if (!results) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-white text-xl">No quiz data found. Please try again.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -101,40 +143,30 @@ export default function QuizResults() {
           <div className="space-y-6">
             {results.questions.map((q, index) => (
               <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 + index * 0.1 }}
-              className={`p-6 rounded-xl border ${
-                q.isCorrect 
-                  ? 'border-emerald-700/30 bg-emerald-900/20' 
-                  : 'border-red-700/30 bg-red-900/20'
-              }`}
-            >
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 + index * 0.1 }}
+                className={`p-6 rounded-xl border ${
+                  q.isCorrect 
+                    ? 'border-emerald-700/30 bg-emerald-900/20' 
+                    : 'border-red-700/30 bg-red-900/20'
+                }`}
+              >
                 <div className="flex items-start gap-4">
                   <div className={`p-2 rounded-full ${
                     q.isCorrect 
-                      ? 'bg-green-900/50 text-green-400' 
-                      : 'bg-red-900/50 text-red-400'
+                      ? 'bg-emerald-900/30 text-emerald-400' 
+                      : 'bg-red-900/30 text-red-400'
                   }`}>
                     {q.isCorrect ? <FiCheck size={20} /> : <FiX size={20} />}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-white mb-3">
-                      {index + 1}. {q.question}
-                    </p>
-                    <div className="grid gap-2 text-sm">
-                      <p className={`${
-                        q.isCorrect ? 'text-green-300' : 'text-red-300'
-                      }`}>
-                        Your answer: {q.userAnswer}
-                      </p>
-                      {!q.isCorrect && (
-                        <p className="text-green-300">
-                          Correct answer: {q.correctAnswer}
-                        </p>
-                      )}
-                    </div>
+                  <div>
+                    <p className="text-white font-medium mb-2">{q.question}</p>
+                    <p className="text-gray-400">Your answer: {q.userAnswer}</p>
+                    {!q.isCorrect && (
+                      <p className="text-emerald-400 mt-1">Correct answer: {q.correctAnswer}</p>
+                    )}
                   </div>
                 </div>
               </motion.div>
