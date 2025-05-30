@@ -1,18 +1,10 @@
 'use client';
 import AnimatedFooter from '@/components/AnimatedFooter';
 import QuizHistory from '@/components/QuizHistory';
+import Spline from '@splinetool/react-spline';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
-
-// Dynamically import Spline with no SSR
-const Spline = dynamic(() => import('@splinetool/react-spline'), {
-  ssr: false,
-  loading: () => (
-    <></>
-  ),
-});
 
 const Home = () => {
   return (
