@@ -14,12 +14,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Tutorly - Your Personal AI Tutor",
-  description: "Experience personalized learning with Tutorly, an advanced AI tutor that adapts to your learning style. Get instant feedback, interactive lessons, and comprehensive assessments.",
+  title: "TutorlyAI - Your Personal AI Tutor",
+  description: "Experience personalized learning with TutorlyAI, an advanced AI tutor that adapts to your learning style. Get instant feedback, interactive lessons, and comprehensive assessments.",
   keywords: "AI tutor, personalized learning, online education, artificial intelligence education, adaptive learning, virtual classroom",
-  authors: [{ name: "Tutorly Team" }],
-  creator: "Tutorly",
-  publisher: "Tutorly",
+  authors: [{ name: "TutorlyAI Team" }],
+  creator: "TutorlyAI",
+  publisher: "TutorlyAI",
   robots: {
     index: true,
     follow: true,
