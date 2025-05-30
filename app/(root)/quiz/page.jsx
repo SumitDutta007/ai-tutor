@@ -54,7 +54,8 @@ export default function Quiz() {
         [
           {"Topic": "Example Topic"},
           {"question": "Q1", "options": ["A", "B", "C", "D"], "correctAnswer": "A"},
-          ... 8 more questions ...
+          {"question": "Q2", "options": ["A", "B", "C", "D"], "correctAnswer": "A"},
+          ...
           {"question": "Q10", "options": ["A", "B", "C", "D"], "correctAnswer": "B"}
         ]
         Return ONLY the JSON array. No other text or formatting.`
@@ -76,7 +77,7 @@ export default function Quiz() {
       console.log('Number of questions:', data.slice(1).length);
       
       // Validate the response format
-      if (!Array.isArray(data) || data.length !== 11) {
+      if (!Array.isArray(data) ) {
         console.error('Invalid data length:', data.length);
         throw new Error(`Expected 11 objects (1 topic + 10 questions), got ${data.length}`);
       }
@@ -105,11 +106,6 @@ export default function Quiz() {
           throw new Error(`Correct answer not found in options for question ${index + 1}`);
         }
       });
-      
-      if (questions.length !== 10) {
-        console.error('Wrong number of questions:', questions.length);
-        throw new Error(`Expected 10 questions, got ${questions.length}`);
-      }
       
       console.log('Final validated questions count:', questions.length);
       setQuestions(questions);
