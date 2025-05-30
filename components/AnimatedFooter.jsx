@@ -229,10 +229,10 @@ const AnimatedFooter = () => {
       />
       <div className="border-t border-white/30 w-[85%] mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-3 text-white text-sm bg-black/80">
         <div className="flex items-center gap-4 text-lg">
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/SumitDutta007" target="_blank" rel="noopener noreferrer">
             <FaGithub className="hover:text-gray-400" />
           </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.linkedin.com/in/sumit-dutta007/" target="_blank" rel="noopener noreferrer">
             <FaLinkedin className="hover:text-blue-400" />
           </a>
         </div>
