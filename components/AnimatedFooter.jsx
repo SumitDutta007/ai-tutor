@@ -5,7 +5,7 @@ import { FaGithub, FaLinkedin, FaRegCopyright } from 'react-icons/fa';
 const AnimatedFooter = () => {
   const canvasRef = useRef(null);
   const textRef = useRef("T");
-  const fullText = "TUTORLYAI";
+  const fullText = "TUTORLYAII";
   const currentIndex = useRef(1);
   const isAdding = useRef(true);
   const mouse = useRef({ x: 0, y: 0, click: false });
@@ -179,7 +179,7 @@ const AnimatedFooter = () => {
           isAdding.current = false;
           setTimeout(() => {
             updateText(); // start deleting after pause
-          }, 800);
+          }, 2000);
           return;
         }
       } else {
