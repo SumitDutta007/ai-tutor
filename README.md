@@ -30,7 +30,7 @@ An AI-powered voice tutor that quizzes you, explains concepts, and conducts mock
 ## 📸 Demo
 
 Check out the full demo video on **YouTube**:  
-[▶️ Watch Here]([https://youtube.com/your-demo-link](https://www.youtube.com/watch?v=4exRN-TcS4w))
+[▶️ Watch Here](https://www.youtube.com/watch?v=4exRN-TcS4w)
 
 ---
 
