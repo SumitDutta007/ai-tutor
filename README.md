@@ -54,6 +54,6 @@ Check out the full demo video on **YouTube**:
 ## 📦 Setup & Installation
 
 ```bash
-git clone [https://github.com/your-username/ai-tutor-notes.git](https://github.com/SumitDutta007/ai-tutor.git)
+git clone [https://github.com/your-username/ai-tutor-notes.git]
 cd ai-tutor-notes
 npm install
