@@ -1,4 +1,5 @@
-![AI Tutor Demo](./public/Screenshot 2025-06-07 123541.png)
+![Tutorly AI Screenshot](./public/Screenshot%202025-06-07%20123541.png)
+
 # 🎓 TUTORLYAI - Your Personalised AI Tutor
 
 An AI-powered voice tutor that quizzes you, explains concepts, and conducts mock oral exams — all based **exclusively** on your own uploaded study materials.
