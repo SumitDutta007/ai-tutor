@@ -1,4 +1,5 @@
 'use client';
+import { getCurrentUser } from '@/lib/actions/auth.action';
 import { getAllQuizzes } from '@/lib/actions/quiz.action';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -6,14 +7,25 @@ import { useEffect, useState } from 'react';
 import { FiArrowRight, FiBook, FiClock } from 'react-icons/fi';
 
 export default function QuizHistory() {
+  const [user, setUser] = useState(null);
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getCurrentUser();
+      setUser(user);
+    };
+    fetchUser();
+  }, []);
+  
+  useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const data = await getAllQuizzes();
+        console.log('Fetching quizzes for user:', user?.id);
+        const data = await getAllQuizzes(user?.id);
+        console.log('Fetched quizzes:', data);
         // Sort quizzes by completion date (most recent first)
         const sortedQuizzes = data.sort((a, b) => {
           // Handle Firestore timestamps or date strings
@@ -28,8 +40,13 @@ export default function QuizHistory() {
         setLoading(false);
       }
     };
-    fetchQuizzes();
-  }, []);
+    
+    if (user?.id) {
+      fetchQuizzes();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'Not completed';

@@ -2,6 +2,7 @@
 import { QuizFileUpload } from '@/components/QuizFileUpload';
 import { QuizQuestion } from '@/components/QuizQuestion';
 import { db } from '@/firebase/client';
+import { getCurrentUser } from '@/lib/actions/auth.action';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
@@ -19,7 +20,7 @@ export default function Quiz() {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [docRef, setDocRef] = useState(null);
   const router = useRouter();
-
+  const [user, setUser] = useState(null);
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({model: 'models/gemini-1.5-flash'});
 
@@ -31,6 +32,7 @@ export default function Quiz() {
 
   const handleFileUpload = useCallback(async (file) => {
     setLoading(true);
+    const user = await getCurrentUser();
     try {
       console.log('Processing file:', file.type);
       
@@ -77,10 +79,12 @@ export default function Quiz() {
       console.log('Number of questions:', data.slice(1).length);
       
       // Validate the response format
-      if (!Array.isArray(data) ) {
-        console.error('Invalid data length:', data.length);
-        throw new Error(`Expected 11 objects (1 topic + 10 questions), got ${data.length}`);
+      if (!Array.isArray(data)) {
+        console.error('Data is not an array:', data);
+        throw new Error('Response must be a JSON array');
       }
+      
+      
       
       if (!data[0].Topic) {
         console.error('First object missing Topic:', data[0]);
@@ -91,12 +95,13 @@ export default function Quiz() {
       const questions = data.slice(1);
       console.log('Questions array length:', questions.length);
       
+      
       // Validate each question
       questions.forEach((q, index) => {
         console.log(`Validating question ${index + 1}:`, q);
-        if (!q.question || !Array.isArray(q.options) || q.options.length !== 4 || !q.correctAnswer) {
+        if (!q.question || !Array.isArray(q.options) || !q.correctAnswer) {
           console.error(`Invalid question format at index ${index}:`, q);
-          throw new Error(`Invalid question format at index ${index}`);
+          throw new Error(`Invalid question format at index ${index + 1}`);
         }
         if (!q.options.includes(q.correctAnswer)) {
           console.error(`Question ${index + 1} correct answer not in options:`, {
@@ -114,6 +119,7 @@ export default function Quiz() {
         topic: topic,
         questions: questions,
         createdAt: new Date(),
+        userId: user?.id,
       };
       
       const docRef = await addDoc(collection(db, "quizes"), quiz);
