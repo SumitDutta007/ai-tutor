@@ -1,4 +1,4 @@
-# 🎓 AI Tutor Using Your Own Notes
+# 🎓 TUTORLYAI - Your Personalised AI Tutor
 
 An AI-powered voice tutor that quizzes you, explains concepts, and conducts mock oral exams — all based **exclusively** on your own uploaded study materials.
 
