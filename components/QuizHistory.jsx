@@ -72,14 +72,14 @@ export default function QuizHistory() {
 
   if (loading) {
     return (
-      <div className="backdrop-blur-xl bg-gray-900/70 rounded-2xl border border-gray-700/50 shadow-xl p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <FiBook className="text-2xl text-emerald-400" />
-          <h2 className="text-2xl font-bold text-white">Quiz History</h2>
+      <div className="backdrop-blur-xl bg-gray-900/70 rounded-2xl border border-gray-700/50 shadow-xl p-4 sm:p-8">
+        <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <FiBook className="text-xl sm:text-2xl text-emerald-400" />
+          <h2 className="text-xl sm:text-2xl font-bold text-white">Quiz History</h2>
         </div>
-        <div className="animate-pulse space-y-4">
+        <div className="animate-pulse space-y-3 sm:space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 bg-gray-800/50 rounded-xl"></div>
+            <div key={i} className="h-20 sm:h-24 bg-gray-800/50 rounded-xl"></div>
           ))}
         </div>
       </div>
@@ -87,18 +87,18 @@ export default function QuizHistory() {
   }
 
   return (
-    <div className="backdrop-blur-xl bg-gray-900/70 rounded-2xl border border-gray-700/50 shadow-xl p-8">
-      <div className="flex items-center gap-3 mb-6">
-        <FiBook className="text-2xl text-emerald-400" />
-        <h2 className="text-2xl font-bold text-white">Quiz History</h2>
+    <div className="backdrop-blur-xl bg-gray-900/70 rounded-2xl border border-gray-700/50 shadow-xl p-4 sm:p-8">
+      <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+        <FiBook className="text-xl sm:text-2xl text-emerald-400" />
+        <h2 className="text-xl sm:text-2xl font-bold text-white">Quiz History</h2>
       </div>
 
       {quizzes.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-gray-400">No quizzes taken yet. Start a new quiz to see your history!</p>
+        <div className="text-center py-6 sm:py-8">
+          <p className="text-gray-400 text-sm sm:text-base">No quizzes taken yet. Start a new quiz to see your history!</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {quizzes.map((quiz, index) => (
             <motion.div
               key={quiz.id}
@@ -108,26 +108,26 @@ export default function QuizHistory() {
               onClick={() => router.push(`/quiz/${quiz.id}`)}
               className="group cursor-pointer"
             >
-              <div className="p-6 rounded-xl border border-emerald-700/30 bg-gray-800/30 hover:bg-emerald-900/20 transition-all">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-medium text-white mb-2">
+              <div className="p-4 sm:p-6 rounded-xl border border-emerald-700/30 bg-gray-800/30 hover:bg-emerald-900/20 transition-all">
+                <div className="flex justify-between items-start gap-4">
+                  <div className="flex-1">
+                    <h3 className="text-base sm:text-lg font-medium text-white mb-2">
                       {quiz.topic || 'Untitled Quiz'}
                     </h3>
-                    <div className="flex items-center gap-4 text-sm">
-                      <div className="flex items-center gap-2 text-emerald-400">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-emerald-400">
                         <FiBook className="text-emerald-500" />
                         <span>{quiz.questions?.length || 0} Questions</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-400">
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-gray-400">
                         <FiClock />
                         <span>{formatDate(quiz.completedAt)}</span>
                       </div>
                     </div>
                     {quiz.correct !== undefined && (
-                      <div className="mt-3">
+                      <div className="mt-2 sm:mt-3">
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+                          <div className="flex-1 h-1.5 sm:h-2 bg-gray-700 rounded-full overflow-hidden">
                             <div
                               className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500"
                               style={{
@@ -135,14 +135,14 @@ export default function QuizHistory() {
                               }}
                             />
                           </div>
-                          <span className="text-emerald-400 text-sm">
+                          <span className="text-emerald-400 text-xs sm:text-sm">
                             {quiz.correct}/{quiz.total}
                           </span>
                         </div>
                       </div>
                     )}
                   </div>
-                  <FiArrowRight className="text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <FiArrowRight className="text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
                 </div>
               </div>
             </motion.div>

@@ -210,26 +210,26 @@ const Agent = ({ userName, userId, avatar, classroomId }) => {
 
     return (
         <>
-            <div className="call-view z-[10]">
+            <div className="call-view z-[10] max-w-5xl mx-auto">
                 <div className="card-classroomer m-4">
                     <div className="avatar">
-                        <Image src="/ai-tutor.png" alt="vapi" width={65} height={65} className="object-cover" />
+                        <Image src="/ai-tutor.png" alt="vapi" width={50} height={50} className="object-cover size-[50px] sm:size-[65px]" />
                         {isSpeaking && <span className="animate-speak" />}
                     </div>
-                    <h3>AI Tutor</h3>
+                    <h3 className="text-base sm:text-lg">AI Tutor</h3>
                 </div>
 
                 <div className="card-border m-4">
                     <div className="card-content">
-                        {avatar && <Image src="/user-avatar.png" alt="user avatar" width={540} height={540} className="rounded-full object-cover size-[120px]" />}
-                        <h3>{userName}</h3>
+                        {avatar && <Image src="/user-avatar.png" alt="user avatar" width={540} height={540} className="rounded-full object-cover size-[80px] sm:size-[120px]" />}
+                        <h3 className="text-base sm:text-lg">{userName}</h3>
                     </div>
                 </div>
             </div>
 
             {error && (
                 <div className="my-4 max-w-xl mx-auto">
-                    <p className="text-center text-destructive-100">{error}</p>
+                    <p className="text-center text-destructive-100 text-sm sm:text-base">{error}</p>
                 </div>
             )}
 
@@ -238,9 +238,9 @@ const Agent = ({ userName, userId, avatar, classroomId }) => {
             </div>
 
             {messages.length > 0 && (
-                <div className="transcript-border my-4">
+                <div className="transcript-border my-4 max-w-3xl mx-auto">
                     <div className="transcript m-1">
-                        <p key={lastMessage} className={cn('transition-opacity duration-500 opacity-0', 'animate-fadeIn opacity-100')}>
+                        <p key={lastMessage} className={cn('transition-opacity duration-500 opacity-0 text-sm sm:text-base', 'animate-fadeIn opacity-100')}>
                             {lastMessage}
                         </p>
                     </div>

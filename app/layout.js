@@ -38,7 +38,10 @@ export default function RootLayout({ children }) {
     <html lang="en" className="dark">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://ai-tutor-gamma-taupe.vercel.app/" />
       </head>

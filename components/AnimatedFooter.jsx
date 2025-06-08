@@ -110,29 +110,43 @@ const AnimatedFooter = () => {
       tempCanvas.height = canvas.height;
       const tempCtx = tempCanvas.getContext('2d');
 
+      // Base font size calculation
       const fontSize = Math.min(Math.max(window.innerWidth / 10, 100), 300);
-      tempCtx.font = `bold ${fontSize}px 'Geist', sans-serif`;
+      
+      // Adjust font size based on width
+      let adjustedFontSize = fontSize;
+      let adjustedSpacing = fontSize * 0.3;
+      
+      if (window.innerWidth < 640) { // sm breakpoint
+        adjustedFontSize = fontSize * 0.5;
+        adjustedSpacing = fontSize * 0.1;
+      } else if (window.innerWidth < 768) { // md breakpoint
+        adjustedFontSize = fontSize * 0.7;
+        adjustedSpacing = fontSize * 0.25;
+      }
+
+      tempCtx.font = `bold ${adjustedFontSize}px 'Geist', sans-serif`;
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
       tempCtx.fillStyle = '#ffffff';
 
-      const spacing = fontSize * 0.3;
       const letters = text.split('');
       const totalWidth = letters.reduce(
-        (acc, char) => acc + tempCtx.measureText(char).width + spacing,
-        -spacing
+        (acc, char) => acc + tempCtx.measureText(char).width + adjustedSpacing,
+        -adjustedSpacing
       );
       let currentX = canvas.width / 2 - totalWidth / 2;
       const centerY = canvas.height / 2;
 
       letters.forEach((char) => {
         tempCtx.fillText(char, currentX, centerY);
-        currentX += tempCtx.measureText(char).width + spacing;
+        currentX += tempCtx.measureText(char).width + adjustedSpacing;
       });
 
       const imageData = tempCtx.getImageData(0, 0, canvas.width, canvas.height);
-      for (let y = 0; y < canvas.height; y += 6) {
-        for (let x = 0; x < canvas.width; x += 6) {
+      const particleSpacing = window.innerWidth < 640 ? 1 : 6;
+      for (let y = 0; y < canvas.height; y += particleSpacing) {
+        for (let x = 0; x < canvas.width; x += particleSpacing) {
           const index = (y * canvas.width + x) * 4;
           const alpha = imageData.data[index + 3];
           if (alpha > 128 && Math.random() < 0.6) {
@@ -221,23 +235,34 @@ const AnimatedFooter = () => {
   }, []);
 
   return (
-    <footer className="relative left-0 w-full bg-gradient-to-t from-black/90 to-transparent backdrop-blur-sm">
+    <footer className="relative left-0 w-full bg-gradient-to-t from-black/90 to-transparent backdrop-blur-sm mt-8 sm:mt-12">
       <canvas
         ref={canvasRef}
-        className="w-full h-[200px]"
+        className="w-full h-[180px] sm:h-[220px] md:h-[250px]"
         style={{ opacity: 0.95 }}
       />
-      <div className="border-t border-white/30 w-[85%] mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-3 text-white text-sm bg-black/80">
-        <div className="flex items-center gap-4 text-lg">
-          <a href="https://github.com/SumitDutta007" target="_blank" rel="noopener noreferrer">
+      <div className="border-t border-white/30 w-[95%] sm:w-[90%] md:w-[85%] mx-auto flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 py-3 text-white text-xs sm:text-sm bg-black/80">
+        <div className="flex items-center gap-3 sm:gap-4 text-base sm:text-lg">
+          <a 
+            href="https://github.com/SumitDutta007" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:scale-110 transition-transform duration-200"
+          >
             <FaGithub className="hover:text-gray-400" />
           </a>
-          <a href="https://www.linkedin.com/in/sumit-dutta007/" target="_blank" rel="noopener noreferrer">
+          <a 
+            href="https://www.linkedin.com/in/sumit-dutta007/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:scale-110 transition-transform duration-200"
+          >
             <FaLinkedin className="hover:text-blue-400" />
           </a>
         </div>
-        <div className="flex items-center gap-1 mt-2 md:mt-0">
-          <FaRegCopyright /> <span>2025 TutorlyAI. All rights reserved.</span>
+        <div className="flex items-center gap-1 mt-2 md:mt-0 text-center">
+          <FaRegCopyright /> 
+          <span className="whitespace-nowrap">2025 TutorlyAI. All rights reserved.</span>
         </div>
       </div>
     </footer>

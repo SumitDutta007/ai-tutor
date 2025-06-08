@@ -50,7 +50,7 @@ const Home = () => {
         </div>
 
         {/* Right Section - Spline Container */}
-        <div className="absolute top-[40%] md:top-[40%] lg:top-0 right-[-15%] w-full lg:w-[75%] h-full z-10">
+        <div className="absolute top-[40%] md:top-[40%] lg:top-0 right-[-15%] w-full lg:w-[75%] h-full z-10 hidden md:block">
           <Spline
             scene="https://prod.spline.design/3gnrm1vc-3LjfsuV/scene.splinecode"
             className="w-full h-full"
