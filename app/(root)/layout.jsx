@@ -24,7 +24,7 @@ const Rootlayout =async ({children}) => {
           />
           <h2 className="text-primary-100">Tutorly</h2>
         </Link>
-        <form action={signOut} className='z-10'>
+        <form action={signOut} className='z-100'>
           <Button 
             type="submit"
             variant="outline"
