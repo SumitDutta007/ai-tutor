@@ -14,6 +14,7 @@ An AI-powered voice tutor that quizzes you, explains concepts, and conducts mock
 - 🗣️ Mock oral exams with follow-up questions and concept explanations
 - 🎯 Fully personalized learning – no pre-trained curriculum
 - 🔒 User authentication and storage via Firebase
+- 🎤 Improves communication skills
 
 ---
 
@@ -52,10 +53,3 @@ Check out the full demo video on **YouTube**:
    Firebase stores user progress and content securely.
 
 ---
-
-## 📦 Setup & Installation
-
-```bash
-git clone [https://github.com/your-username/ai-tutor-notes.git]
-cd ai-tutor-notes
-npm install
