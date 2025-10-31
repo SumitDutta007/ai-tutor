@@ -52,5 +52,9 @@ Check out the full demo video on **YouTube**:
 5. **Storage & Sessions**  
    Firebase stores user progress and content securely.
 
+<<<<<<< Updated upstream
 ---
 This is change for pr!
+=======
+
+>>>>>>> Stashed changes
