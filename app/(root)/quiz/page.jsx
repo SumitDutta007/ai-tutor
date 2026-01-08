@@ -1,15 +1,15 @@
-'use client'
-import { QuizFileUpload } from '@/components/QuizFileUpload';
-import { QuizQuestion } from '@/components/QuizQuestion';
-import { db } from '@/firebase/client';
-import { getCurrentUser } from '@/lib/actions/auth.action';
+"use client";
+import { QuizFileUpload } from "@/components/QuizFileUpload";
+import { QuizQuestion } from "@/components/QuizQuestion";
+import { db } from "@/firebase/client";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
-import { FiArrowRight, FiCpu } from 'react-icons/fi';
-import { toast } from 'sonner';
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { FiArrowRight, FiCpu } from "react-icons/fi";
+import { toast } from "sonner";
 
 export default function Quiz() {
   const [questions, setQuestions] = useState([]);
@@ -22,7 +22,7 @@ export default function Quiz() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({model: 'models/gemini-1.5-flash'});
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   useEffect(() => {
     if (quizCompleted && docRef) {
@@ -30,21 +30,22 @@ export default function Quiz() {
     }
   }, [quizCompleted, docRef, router]);
 
-  const handleFileUpload = useCallback(async (file) => {
-    setLoading(true);
-    const user = await getCurrentUser();
-    try {
-      console.log('Processing file:', file.type);
-      
-      // Process with Gemini
-      const result = await model.generateContent([
-        {
-          inlineData: {
-            mimeType: file.type,
-            data: file.file
-          }
-        },
-        `You must generate EXACTLY 10 multiple choice questions. No more, no less.
+  const handleFileUpload = useCallback(
+    async (file) => {
+      setLoading(true);
+      const user = await getCurrentUser();
+      try {
+        console.log("Processing file:", file.type);
+
+        // Process with Gemini
+        const result = await model.generateContent([
+          {
+            inlineData: {
+              mimeType: file.type,
+              data: file.file,
+            },
+          },
+          `You must generate EXACTLY 10 multiple choice questions. No more, no less.
         Format as a JSON array with EXACTLY 11 objects total:
         - First object: {Topic: 'topic name'}
         - Followed by EXACTLY 10 question objects
@@ -60,78 +61,82 @@ export default function Quiz() {
           ...
           {"question": "Q10", "options": ["A", "B", "C", "D"], "correctAnswer": "B"}
         ]
-        Return ONLY the JSON array. No other text or formatting.`
-      ]);
-      
-      const extractedText = result.response.text();
-      console.log('Raw response from Gemini:', extractedText);
-      
-      const cleanedText = extractedText
-        .replace(/^```(?:json)?\s*/i, '')
-        .replace(/```[\s\S]*$/, '')
-        .trim();
-      
-      console.log('Cleaned response:', cleanedText);
-      
-      const data = JSON.parse(cleanedText);
-      console.log('Parsed data length:', data.length);
-      console.log('First object:', data[0]);
-      console.log('Number of questions:', data.slice(1).length);
-      
-      // Validate the response format
-      if (!Array.isArray(data)) {
-        console.error('Data is not an array:', data);
-        throw new Error('Response must be a JSON array');
-      }
-      
-      
-      
-      if (!data[0].Topic) {
-        console.error('First object missing Topic:', data[0]);
-        throw new Error('First object must contain Topic field');
-      }
-      
-      const topic = data[0].Topic;
-      const questions = data.slice(1);
-      console.log('Questions array length:', questions.length);
-      
-      
-      // Validate each question
-      questions.forEach((q, index) => {
-        console.log(`Validating question ${index + 1}:`, q);
-        if (!q.question || !Array.isArray(q.options) || !q.correctAnswer) {
-          console.error(`Invalid question format at index ${index}:`, q);
-          throw new Error(`Invalid question format at index ${index + 1}`);
+        Return ONLY the JSON array. No other text or formatting.`,
+        ]);
+
+        const extractedText = result.response.text();
+        console.log("Raw response from Gemini:", extractedText);
+
+        const cleanedText = extractedText
+          .replace(/^```(?:json)?\s*/i, "")
+          .replace(/```[\s\S]*$/, "")
+          .trim();
+
+        console.log("Cleaned response:", cleanedText);
+
+        const data = JSON.parse(cleanedText);
+        console.log("Parsed data length:", data.length);
+        console.log("First object:", data[0]);
+        console.log("Number of questions:", data.slice(1).length);
+
+        // Validate the response format
+        if (!Array.isArray(data)) {
+          console.error("Data is not an array:", data);
+          throw new Error("Response must be a JSON array");
         }
-        if (!q.options.includes(q.correctAnswer)) {
-          console.error(`Question ${index + 1} correct answer not in options:`, {
-            correctAnswer: q.correctAnswer,
-            options: q.options
-          });
-          throw new Error(`Correct answer not found in options for question ${index + 1}`);
+
+        if (!data[0].Topic) {
+          console.error("First object missing Topic:", data[0]);
+          throw new Error("First object must contain Topic field");
         }
-      });
-      
-      console.log('Final validated questions count:', questions.length);
-      setQuestions(questions);
-      
-      const quiz = {
-        topic: topic,
-        questions: questions,
-        createdAt: new Date(),
-        userId: user?.id,
-      };
-      
-      const docRef = await addDoc(collection(db, "quizes"), quiz);
-      setDocRef(docRef);
-      toast.success('Questions generated successfully!');
-    } catch (error) {
-      console.error('Error generating questions:', error);
-      toast.error(`Failed to generate questions: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  }, [model]);
+
+        const topic = data[0].Topic;
+        const questions = data.slice(1);
+        console.log("Questions array length:", questions.length);
+
+        // Validate each question
+        questions.forEach((q, index) => {
+          console.log(`Validating question ${index + 1}:`, q);
+          if (!q.question || !Array.isArray(q.options) || !q.correctAnswer) {
+            console.error(`Invalid question format at index ${index}:`, q);
+            throw new Error(`Invalid question format at index ${index + 1}`);
+          }
+          if (!q.options.includes(q.correctAnswer)) {
+            console.error(
+              `Question ${index + 1} correct answer not in options:`,
+              {
+                correctAnswer: q.correctAnswer,
+                options: q.options,
+              }
+            );
+            throw new Error(
+              `Correct answer not found in options for question ${index + 1}`
+            );
+          }
+        });
+
+        console.log("Final validated questions count:", questions.length);
+        setQuestions(questions);
+
+        const quiz = {
+          topic: topic,
+          questions: questions,
+          createdAt: new Date(),
+          userId: user?.id,
+        };
+
+        const docRef = await addDoc(collection(db, "quizes"), quiz);
+        setDocRef(docRef);
+        toast.success("Questions generated successfully!");
+      } catch (error) {
+        console.error("Error generating questions:", error);
+        toast.error(`Failed to generate questions: ${error.message}`);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [model]
+  );
 
   const handleAnswer = async (answer) => {
     const newAnswers = { ...answers, [currentQuestion]: answer };
@@ -147,8 +152,8 @@ export default function Quiz() {
         });
         setQuizCompleted(true);
       } catch (error) {
-        console.error('Error saving answers:', error);
-        toast.error('Failed to save answers. Please try again.');
+        console.error("Error saving answers:", error);
+        toast.error("Failed to save answers. Please try again.");
       }
     }
   };
@@ -176,23 +181,25 @@ export default function Quiz() {
       <div className="relative z-10 min-h-screen py-12 px-4">
         <div className="max-w-4xl mx-auto">
           {!quizStarted ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="backdrop-blur-xl bg-gray-900/70 rounded-2xl border border-emerald-500/20 shadow-xl p-8 relative overflow-hidden"
             >
               {/* Gradient overlay for card */}
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-cyan-500/5"></div>
-              
+
               {/* Card content */}
               <div className="relative z-10">
                 <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
                   <FiCpu className="text-emerald-400" />
                   AI-Powered Quiz
                 </h1>
-                <p className="text-gray-300 mb-8">Let AI analyze your content and test your knowledge</p>
-                
-                <QuizFileUpload 
+                <p className="text-gray-300 mb-8">
+                  Let AI analyze your content and test your knowledge
+                </p>
+
+                <QuizFileUpload
                   onFileUpload={handleFileUpload}
                   isLoading={loading}
                 />
@@ -210,7 +217,7 @@ export default function Quiz() {
               </div>
             </motion.div>
           ) : (
-            <QuizQuestion 
+            <QuizQuestion
               question={questions[currentQuestion]}
               onAnswer={handleAnswer}
               progress={progress}
